@@ -1,8 +1,9 @@
-import mongoose, {Schema, Document, mongo} from "mongoose";
+import mongoose, {Schema, Document} from "mongoose";
 
 export interface IUser extends Document {
   name: string
   password: string
+  rank: number
 }
 
 const userSchema: Schema = new Schema({
@@ -13,7 +14,10 @@ const userSchema: Schema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: true
+  },
+  rank: {
+    type: Number
   }
 })
 

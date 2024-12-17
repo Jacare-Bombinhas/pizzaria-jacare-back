@@ -5,9 +5,7 @@ export interface ISubCategory extends Document {
   nameSub: string, 
   orderNSub: number,
   category: Types.ObjectId,
-  products: PopulatedDoc<IProduct & Document>[],
-  priceSmall: number,
-  priceBig: number
+  products: PopulatedDoc<IProduct & Document>[]
 }
 
 const SubCategorySchema: Schema = new Schema({
@@ -30,13 +28,7 @@ const SubCategorySchema: Schema = new Schema({
       type: Types.ObjectId,
       ref: "Product"
     }
-  ],
-  priceSmall: {
-    type: Number
-  },
-  priceBig: {
-    type: Number
-  }
+  ]
 }, {timestamps: true})
 
 const SubCategory = mongoose.model<ISubCategory>("SubCategory", SubCategorySchema)

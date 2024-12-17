@@ -1,5 +1,6 @@
 import type { Request, Response } from "express"
 import SubCategory from "../models/SubCategories"
+import Product from "../models/Product"
 
 export class SubCategoryController {
   static createSubCategory = async (req: Request, res: Response) => {
@@ -56,10 +57,6 @@ export class SubCategoryController {
         return
       }
 
-      // req.subCat.nameSub = req.body.nameSub
-      // req.subCat.orderNSub = req.body.orderNSub
-      // await req.subCat.save()
-
       res.send("Sub-Categoría actualizada correctamente")
     } catch (error) {
       res.status(500).json({error: "Hubo un error"})
@@ -68,24 +65,27 @@ export class SubCategoryController {
 
   static deleteSubCategory = async (req: Request, res: Response) => {
     try {
+      const products = await Product.find({subcategory: req.subCat.id})
+
       if(req.subCat.category.toString() !== req.category.id) {
         const error = new Error("Sub-Categoría no pertenece a la Categoría")
         res.status(400).json({error: error.message})
         return
       }
 
-      //revisar aca si la comparación esta bien
+      //deletes the subcat from the category.subcategorys array
       req.category.subCategories = req.category.subCategories.filter(subcat => subcat.toString() !== req.subCat.id.toString())
 
-      await Promise.allSettled([req.subCat.deleteOne(), req.category.save()])
+      const UpdateProductsPromises = products.map(async (product) => {
+        product.subcategory = null
+        return await product.save()
+      })      
+
+      await Promise.allSettled([req.subCat.deleteOne(), req.category.save(), ...UpdateProductsPromises])
 
       res.send("Sub-Categoría eliminada")
     } catch (error) {
       res.status(500).json({error: "Hubo un error"})
     }
   }
-
-  
-
-
 }
