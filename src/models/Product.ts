@@ -3,6 +3,7 @@ import mongoose, {Schema, Document, Types} from "mongoose";
 export interface IProduct extends Document {
   idNumber: number,
   name: string,
+  veggy: boolean,
   category: Types.ObjectId,
   subcategory: Types.ObjectId,
   ingredients: string,
@@ -15,11 +16,15 @@ const ProductSchema: Schema = new Schema({
   idNumber: { 
     type: Number,
     required: true,
-    trim: true},
+    trim: true
+  },
   name: { 
     type: String, 
     required: true, 
     trim: true
+  },
+  veggy: {
+    type: Boolean
   },
   category: { 
     type: Types.ObjectId, 
